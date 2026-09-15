@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Luna Language Helper AI</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:linear-gradient(135deg,#f3e8ff,#fce7f3,#e0f2fe);
+ color:#222;
+}
+
+.app{
+ max-width:900px;
+ margin:auto;
+ padding:14px;
+}
+
+.header{
+ background:linear-gradient(135deg,#7c3aed,#db2777);
+ color:#fff;
+ text-align:center;
+ padding:22px 15px;
+ border-radius:24px;
+ box-shadow:0 8px 25px #0002;
+}
+
+.header h1{
+ margin:0 0 7px;
+ font-size:29px;
+}
+
+.header p{margin:0}
+
+.card{
+ background:#fff;
+ margin-top:14px;
+ padding:16px;
+ border-radius:20px;
+ box-shadow:0 5px 20px #0001;
+}
+
+.ai{
+ display:flex;
+ gap:13px;
+ align-items:center;
+}
+
+.avatar{
+ width:65px;
+ height:65px;
+ min-width:65px;
+ border-radius:50%;
+ background:linear-gradient(135deg,#ec4899,#8b5cf6);
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:36px;
+}
+
+.ai h3{
+ margin:0 0 5px;
+ color:#7c3aed;
+}
+
+.ai p{
+ margin:0;
+ line-height:1.4;
+}
+
+button,select,textarea{
+ font-family:inherit;
+}
+
+button{
+ border:0;
+ padding:12px 15px;
+ border-radius:12px;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+button:active{transform:scale(.96)}
+
+.primary{
+ background:linear-gradient(135deg,#7c3aed,#a855f7);
+ color:#fff;
+}
+
+.soft{
+ background:#ede9fe;
+ color:#5b21b6;
+}
+
+.blue{
+ background:#dbeafe;
+ color:#1d4ed8;
+}
+
+.green{
+ background:#dcfce7;
+ color:#166534;
+}
+
+.red{
+ background:#fee2e2;
+ color:#b91c1c;
+}
+
+.row{
+ display:flex;
+ gap:9px;
+ margin-top:14px;
+}
+
+select{
+ flex:1;
+ padding:13px;
+ border:1px solid #ddd;
+ border-radius:12px;
+ background:#fff;
+ font-size:15px;
+}
+
+textarea{
+ width:100%;
+ min-height:160px;
+ margin-top:14px;
+ padding:15px;
+ border:1px solid #ddd;
+ border-radius:15px;
+ font-size:17px;
+ resize:vertical;
+ outline:none;
+}
+
+textarea:focus{
+ border-color:#8b5cf6;
+ box-shadow:0 0 0 3px #ede9fe;
+}
+
+.actions{
+ display:flex;
+ flex-wrap:wrap;
+ gap:8px;
+ margin-top:9px;
+}
+
+.translate{
+ width:100%;
+ margin-top:14px;
+ padding:15px;
+ font-size:17px;
+}
+
+.status{
+ margin-top:12px;
+ padding:11px;
+ border-radius:12px;
+ background:#f3f4f6;
+ text-align:center;
+}
+
+.statsTop{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+
+.level{
+ color:#7c3aed;
+ font-size:21px;
+ font-weight:bold;
+}
+
+.progress{
+ height:11px;
+ background:#eee;
+ border-radius:20px;
+ overflow:hidden;
+ margin-top:10px;
+}
+
+.bar{
+ height:100%;
+ width:0%;
+ background:linear-gradient(90deg,#8b5cf6,#ec4899);
+ transition:.4s;
+}
+
+.badges{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:8px;
+ margin-top:12px;
+}
+
+.badge{
+ padding:10px 5px;
+ text-align:center;
+ background:#f9fafb;
+ border:1px solid #eee;
+ border-radius:13px;
+ font-size:12px;
+}
+
+.locked{
+ opacity:.35;
+ filter:grayscale(1);
+}
+
+.puzzle h2{
+ color:#7c3aed;
+ margin-top:0;
+}
+
+.question{
+ font-size:18px;
+ font-weight:bold;
+ margin-bottom:12px;
+}
+
+.answers{
+ display:grid;
+ gap:8px;
+}
+
+.answer{
+ width:100%;
+ text-align:left;
+ background:#f5f3ff;
+ color:#4c1d95;
+}
+
+.correct{
+ background:#dcfce7!important;
+ color:#166534!important;
+}
+
+.wrong{
+ background:#fee2e2!important;
+ color:#991b1b!important;
+}
+
+@media(max-width:600px){
+ .badges{grid-template-columns:repeat(2,1fr)}
+ .row{flex-wrap:wrap}
+ .row select{min-width:0}
+ .header h1{font-size:25px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<div class="header">
+<h1>🌍 Luna Language Helper</h1>
+<p>Translate • Speak • Learn • Play 🚀</p>
+</div>
+
+
+<!-- LUNA AI -->
+<div class="card ai">
+
+<div class="avatar">👩‍💻</div>
+
+<div style="flex:1">
+<h3>Luna AI</h3>
+<p id="aiText">
+Hi! Main Luna hoon 😊 Aap jo likhenge main uska translation karungi aur padhkar bhi sunaungi.
+</p>
+</div>
+
+<button class="soft" id="aiSpeak">🔊</button>
+
+</div>
+
+
+<!-- STATS -->
+<div class="card">
+
+<div class="statsTop">
+<div class="level">⭐ Level <span id="level">1</span></div>
+<div><b><span id="xp">0</span> XP</b></div>
+</div>
+
+<div class="progress">
+<div class="bar" id="bar"></div>
+</div>
+
+<div class="badges">
+
+<div class="badge" id="b1">
+🌱<br><b>First Step</b><br>Translate once
+</div>
+
+<div class="badge locked" id="b2">
+🧩<br><b>Puzzle Star</b><br>5 puzzles
+</div>
+
+<div class="badge locked" id="b3">
+🏆<br><b>Perfect</b><br>3 correct
+</div>
+
+<div class="badge locked" id="b4">
+👑<br><b>Master</b><br>Level 5
+</div>
+
+</div>
+</div>
+
+
+<!-- LANGUAGES -->
+<div class="row">
+
+<select id="from">
+<option value="auto">🔍 Auto Detect</option>
+<option value="hi">🇮🇳 Hindi</option>
+<option value="en">🇬🇧 English</option>
+<option value="mr">🇮🇳 Marathi</option>
+<option value="bn">🇧🇩 Bengali</option>
+<option value="gu">🇮🇳 Gujarati</option>
+<option value="pa">🇮🇳 Punjabi</option>
+<option value="ur">🇵🇰 Urdu</option>
+<option value="es">🇪🇸 Spanish</option>
+<option value="it">🇮🇹 Italian</option>
+<option value="ar">🇸🇦 Arabic</option>
+<option value="de">🇩🇪 German</option>
+<option value="fr">🇫🇷 French</option>
+<option value="pt">🇵🇹 Portuguese</option>
+<option value="ja">🇯🇵 Japanese</option>
+<option value="ko">🇰🇷 Korean</option>
+</select>
+
+<button class="soft" id="swap">⇄</button>
+
+<select id="to">
+<option value="en" selected>🇬🇧 English</option>
+<option value="hi">🇮🇳 Hindi</option>
+<option value="mr">🇮🇳 Marathi</option>
+<option value="bn">🇧🇩 Bengali</option>
+<option value="gu">🇮🇳 Gujarati</option>
+<option value="pa">🇮🇳 Punjabi</option>
+<option value="ur">🇵🇰 Urdu</option>
+<option value="es">🇪🇸 Spanish</option>
+<option value="it">🇮🇹 Italian</option>
+<option value="ar">🇸🇦 Arabic</option>
+<option value="de">🇩🇪 German</option>
+<option value="fr">🇫🇷 French</option>
+<option value="pt">🇵🇹 Portuguese</option>
+<option value="ja">🇯🇵 Japanese</option>
+<option value="ko">🇰🇷 Korean</option>
+</select>
+
+</div>
+
+
+<!-- INPUT -->
+<div class="card">
+
+<textarea id="input" placeholder="✍️ Yahan kuch bhi likho..."></textarea>
+
+<div class="actions">
+<button class="blue" id="mic">🎤 Speak</button>
+<button class="soft" id="readInput">🔊 Read</button>
+<button class="red" id="clear">🗑 Clear</button>
+</div>
+
+<button class="primary translate" id="translate">
+🌐 Translate
+</button>
+
+</div>
+
+
+<!-- OUTPUT -->
+<div class="card">
+
+<textarea id="output" placeholder="✨ Translation yahan aayega..." readonly></textarea>
+
+<div class="actions">
+<button class="green" id="listen">🔊 Listen</button>
+<button class="soft" id="copy">📋 Copy</button>
+</div>
+
+</div>
+
+<div class="status" id="status">
+✅ Ready
+</div>
+
+
+<!-- PUZZLE -->
+<div class="card puzzle">
+
+<h2>🧩 Language Puzzle</h2>
+
+<div class="question" id="question">
+Loading...
+</div>
+
+<div class="answers" id="answers"></div>
+
+<button class="primary" id="next" style="width:100%;margin-top:12px">
+➡️ Next Puzzle
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =====================================
+   ALL JAVASCRIPT STARTS HERE
+===================================== */
+
+document.addEventListener("DOMContentLoaded", function(){
+
+const $ = id => document.getElementById(id);
+
+const input = $("input");
+const output = $("output");
+
+const from = $("from");
+const to = $("to");
+
+const translate = $("translate");
+const clear = $("clear");
+const swap = $("swap");
+const copy = $("copy");
+
+const readInput = $("readInput");
+const listen = $("listen");
+const aiSpeak = $("aiSpeak");
+const mic = $("mic");
+
+const status = $("status");
+const aiText = $("aiText");
+
+const level = $("level");
+const xpBox = $("xp");
+const bar = $("bar");
+
+const question = $("question");
+const answers = $("answers");
+const next = $("next");
+
+
+/* =====================================
+   STATUS
+===================================== */
+
+function setStatus(text){
+ status.textContent = text;
+}
+
+
+/* =====================================
+   XP / LEVEL
+===================================== */
+
+let xp = Number(localStorage.getItem("lunaXP") || 0);
+let translations = Number(localStorage.getItem("lunaTranslations") || 0);
+let solved = Number(localStorage.getItem("lunaSolved") || 0);
+let correct = Number(localStorage.getItem("lunaCorrect") || 0);
+
+function updateStats(){
+
+ const currentLevel = Math.floor(xp / 100) + 1;
+
+ level.textContent = currentLevel;
+ xpBox.textContent = xp;
+ bar.style.width = (xp % 100) + "%";
+
+ if(translations >= 1)
+  $("b1").classList.remove("locked");
+
+ if(solved >= 5)
+  $("b2").classList.remove("locked");
+
+ if(correct >= 3)
+  $("b3").classList.remove("locked");
+
+ if(currentLevel >= 5)
+  $("b4").classList.remove("locked");
+
+ localStorage.setItem("lunaXP",xp);
+ localStorage.setItem("lunaTranslations",translations);
+ localStorage.setItem("lunaSolved",solved);
+ localStorage.setItem("lunaCorrect",correct);
+}
+
+function addXP(n){
+ xp += n;
+ updateStats();
+}
+
+updateStats();
+
+
+/* =====================================
+   SPEECH
+===================================== */
+
+function speechCode(code){
+
+ const map={
+  hi:"hi-IN",
+  en:"en-US",
+  mr:"mr-IN",
+  bn:"bn-IN",
+  gu:"gu-IN",
+  pa:"pa-IN",
+  ur:"ur-PK",
+  es:"es-ES",
+  it:"it-IT",
+  ar:"ar-SA",
+  de:"de-DE",
+  fr:"fr-FR",
+  pt:"pt-PT",
+  ja:"ja-JP",
+  ko:"ko-KR"
+ };
+
+ return map[code] || "en-US";
+}
+
+function speak(text,lang){
+
+ if(!text || !text.trim()){
+  setStatus("⚠️ Pehle text likho.");
+  return;
+ }
+
+ if(!("speechSynthesis" in window)){
+  setStatus("❌ Speaker supported nahi hai.");
+  return;
+ }
+
+ speechSynthesis.cancel();
+
+ const voiceText = new SpeechSynthesisUtterance(text);
+
+ voiceText.lang = speechCode(lang || "en");
+ voiceText.rate = .9;
+ voiceText.pitch = 1.1;
+ voiceText.volume = 1;
+
+ const voices = speechSynthesis.getVoices();
+
+ const wanted = voices.find(v =>
+  v.lang &&
+  v.lang.toLowerCase().startsWith(
+   voiceText.lang.split("-")[0].toLowerCase()
+  )
+ );
+
+ if(wanted) voiceText.voice=wanted;
+
+ voiceText.onstart=()=>{
+  setStatus("🔊 Luna AI bol rahi hai...");
+ };
+
+ voiceText.onend=()=>{
+  setStatus("✅ Done");
+ };
+
+ voiceText.onerror=()=>{
+  setStatus("⚠️ Speaker error");
+ };
+
+ speechSynthesis.speak(voiceText);
+}
+
+
+/* AI SPEAK */
+
+aiSpeak.onclick=function(){
+ speak(aiText.innerText,"en");
+};
+
+
+/* INPUT READ */
+
+readInput.onclick=function(){
+
+ let lang=from.value;
+
+ if(lang==="auto") lang="en";
+
+ speak(input.value,lang);
+
+};
+
+
+/* OUTPUT LISTEN */
+
+listen.onclick=function(){
+ speak(output.value,to.value);
+};
+
+
+/* =====================================
+   CLEAR
+===================================== */
+
+clear.onclick=function(){
+
+ input.value="";
+ output.value="";
+
+ setStatus("🗑 Cleared");
+
+};
+
+
+/* =====================================
+   COPY
+===================================== */
+
+copy.onclick=async function(){
+
+ if(!output.value.trim()){
+  setStatus("⚠️ Pehle translation karo.");
+  return;
+ }
+
+ try{
+
+  await navigator.clipboard.writeText(output.value);
+  setStatus("📋 Copied!");
+
+ }catch(e){
+
+  output.removeAttribute("readonly");
+  output.select();
+  document.execCommand("copy");
+  output.setAttribute("readonly","");
+
+  setStatus("📋 Copied!");
+
+ }
+
+};
+
+
+/* =====================================
+   SWAP
+===================================== */
+
+swap.onclick=function(){
+
+ if(from.value==="auto"){
+  setStatus("ℹ️ Auto Detect ko swap nahi kar sakte.");
+  return;
+ }
+
+ const language=from.value;
+
+ from.value=to.value;
+ to.value=language;
+
+ const text=input.value;
+
+ input.value=output.value;
+ output.value=text;
+
+ setStatus("🔄 Languages swapped!");
+
+};
+
+
+/* =====================================
+   OFFLINE BASIC PHRASES
+===================================== */
+
+const phrases={
+
+"hello":{
+hi:"नमस्ते",
+mr:"नमस्कार",
+bn:"হ্যালো",
+gu:"નમસ્તે",
+pa:"ਸਤ ਸ੍ਰੀ ਅਕਾਲ",
+ur:"ہیلو",
+es:"Hola",
+it:"Ciao",
+ar:"مرحبا",
+de:"Hallo",
+fr:"Bonjour",
+pt:"Olá",
+ja:"こんにちは",
+ko:"안녕하세요"
+},
+
+"thank you":{
+hi:"धन्यवाद",
+mr:"धन्यवाद",
+bn:"ধন্যবাদ",
+gu:"આભાર",
+pa:"ਧੰਨਵਾਦ",
+ur:"شکریہ",
+es:"Gracias",
+it:"Grazie",
+ar:"شكرا",
+de:"Danke",
+fr:"Merci",
+pt:"Obrigado",
+ja:"ありがとう",
+ko:"감사합니다"
+},
+
+"good morning":{
+hi:"सुप्रभात",
+mr:"शुभ प्रभात",
+bn:"সুপ্রভাত",
+gu:"સુપ્રભાત",
+pa:"ਸ਼ੁਭ ਸਵੇਰ",
+ur:"صبح بخیر",
+es:"Buenos días",
+it:"Buongiorno",
+ar:"صباح الخير",
+de:"Guten Morgen",
+fr:"Bonjour",
+pt:"Bom dia",
+ja:"おはようございます",
+ko:"좋은朝"
+},
+
+"how are you":{
+hi:"आप कैसे हैं?",
+mr:"तुम्ही कसे आहात?",
+bn:"আপনি কেমন আছেন?",
+gu:"તમે કેમ છો?",
+pa:"ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ?",
+ur:"آپ کیسے ہیں؟",
+es:"¿Cómo estás?",
+it:"Come stai?",
+ar:"كيف حالك؟",
+de:"Wie geht es dir?",
+fr:"Comment allez-vous ?",
+pt:"Como você está?",
+ja:"お元気ですか？",
+ko:"어떻게 지내세요?"
+},
+
+"i love you":{
+hi:"मैं तुमसे प्यार करता हूँ",
+mr:"माझं तुझ्यावर प्रेम आहे",
+bn:"আমি তোমাকে ভালোবাসি",
+gu:"હું તને પ્રેમ કરું છું",
+pa:"ਮੈਂ ਤੈਨੂੰ ਪਿਆਰ ਕਰਦਾ ਹਾਂ",
+ur:"میں تم سے محبت کرتا ہوں",
+es:"Te quiero",
+it:"Ti amo",
+ar:"أحبك",
+de:"Ich liebe dich",
+fr:"Je t'aime",
+pt:"Eu te amo",
+ja:"愛しています",
+ko:"사랑해요"
+}
+
+};
+
+
+/* =====================================
+   TRANSLATE
+===================================== */
+
+translate.onclick=async function(){
+
+ const text=input.value.trim();
+
+ if(!text){
+  setStatus("⚠️ Pehle kuch likho.");
+  return;
+ }
+
+ const source=from.value;
+ const target=to.value;
+
+ if(source!=="auto" && source===target){
+
+  output.value=text;
+  setStatus("ℹ️ Same language");
+  return;
+
+ }
+
+ translate.disabled=true;
+ translate.textContent="⏳ Translating...";
+ setStatus("🌐 Translation ho rahi hai...");
+
+ try{
+
+  const key=text
+   .toLowerCase()
+   .replace(/[!?.,]/g,"")
+   .trim();
+
+  if(phrases[key] && phrases[key][target]){
+
+   output.value=phrases[key][target];
+
+  }else{
+
+   let url=
+    "https://translate.googleapis.com/translate_a/single"+
+    "?client=gtx"+
+    "&sl="+encodeURIComponent(source)+
+    "&tl="+encodeURIComponent(target)+
+    "&dt=t"+
+    "&q="+encodeURIComponent(text);
+
+   const response=await fetch(url);
+
+   if(!response.ok)
+    throw new Error("Network");
+
+   const data=await response.json();
+
+   let result="";
+
+   if(data && data[0]){
+
+    data[0].forEach(part=>{
+     if(part && part[0])
+      result+=part[0];
+    });
+
+   }
+
+   if(!result.trim())
+    throw new Error("Empty");
+
+   output.value=result;
+
+  }
+
+  translations++;
+  addXP(10);
+
+  aiText.textContent=
+   "Translation ready! 😊 Ab Listen button dabao aur main ise padhkar sunaungi.";
+
+  setStatus("✅ Translation complete!");
+
+ }catch(error){
+
+  console.log(error);
+
+  setStatus(
+   "❌ Translation ke liye Internet ON karo aur dobara try karo."
+  );
+
+ }
+
+ translate.disabled=false;
+ translate.textContent="🌐 Translate";
+
+};
+
+
+/* =====================================
+   CTRL + ENTER
+===================================== */
+
+input.addEventListener("keydown",function(e){
+
+ if(e.ctrlKey && e.key==="Enter"){
+  e.preventDefault();
+  translate.click();
+ }
+
+});
+
+
+/* =====================================
+   MICROPHONE
+===================================== */
+
+const Recognition=
+ window.SpeechRecognition ||
+ window.webkitSpeechRecognition;
+
+if(Recognition){
+
+ const recognition=new Recognition();
+
+ recognition.continuous=false;
+ recognition.interimResults=false;
+
+ mic.onclick=function(){
+
+  let lang=from.value;
+
+  if(lang==="auto")
+   lang="en";
+
+  recognition.lang=speechCode(lang);
+
+  try{
+
+   recognition.start();
+
+   mic.textContent="🎙️ Listening...";
+   setStatus("🎙️ Bolo...");
+
+  }catch(e){
+
+   setStatus("ℹ️ Microphone already active hai.");
+
+  }
+
+ };
+
+ recognition.onresult=function(event){
+
+  const spoken=
+   event.results[0][0].transcript;
+
+  input.value +=
+   (input.value ? " " : "")+spoken;
+
+  setStatus("✅ Voice text added.");
+
+ };
+
+ recognition.onend=function(){
+  mic.textContent="🎤 Speak";
+ };
+
+ recognition.onerror=function(event){
+
+  mic.textContent="🎤 Speak";
+
+  setStatus("❌ Mic: "+event.error);
+
+ };
+
+}else{
+
+ mic.onclick=function(){
+
+  setStatus(
+   "❌ Voice input ke liye Chrome browser use karo."
+  );
+
+ };
+
+}
+
+
+/* =====================================
+   PUZZLES
+===================================== */
+
+const puzzleList=[
+
+{
+ q:"'Thank you' ka Hindi meaning kya hai?",
+ a:["धन्यवाद","नमस्ते","अलविदा","सुप्रभात"],
+ c:"धन्यवाद"
+},
+
+{
+ q:"'Hello' ka Urdu meaning kya hai?",
+ a:["خدا حافظ","ہیلو","شکریہ","صبح بخیر"],
+ c:"ہیلو"
+},
+
+{
+ q:"'Good Morning' ka Hindi meaning?",
+ a:["शुभ रात्रि","सुप्रभात","धन्यवाद","अलविदा"],
+ c:"सुप्रभात"
+},
+
+{
+ q:"'Gracias' kis language ka word hai?",
+ a:["Spanish","German","Arabic","Japanese"],
+ c:"Spanish"
+},
+
+{
+ q:"'Danke' ka meaning kya hai?",
+ a:["Hello","Goodbye","Thank you","Love"],
+ c:"Thank you"
+},
+
+{
+ q:"'مرحبا' ka meaning kya hai?",
+ a:["Hello","Thank you","Good night","Sorry"],
+ c:"Hello"
+}
+
+];
+
+let puzzleIndex=0;
+
+function loadPuzzle(){
+
+ const p=puzzleList[puzzleIndex];
+
+ question.textContent=p.q;
+
+ answers.innerHTML="";
+
+ p.a.forEach(option=>{
+
+  const btn=document.createElement("button");
+
+  btn.className="answer";
+  btn.textContent=option;
+
+  btn.onclick=function(){
+
+   const all=answers.querySelectorAll("button");
+
+   all.forEach(x=>x.disabled=true);
+
+   solved++;
+
+   if(option===p.c){
+
+    btn.classList.add("correct");
+
+    correct++;
+    addXP(20);
+
+    setStatus("🎉 Correct! +20 XP");
+
+    aiText.textContent=
+     "Excellent! 🎉 Bilkul correct answer!";
+
+   }else{
+
+    btn.classList.add("wrong");
+
+    all.forEach(x=>{
+
+     if(x.textContent===p.c)
+      x.classList.add("correct");
+
+    });
+
+    setStatus("❌ Wrong! Correct answer: "+p.c);
+
+   }
+
+   updateStats();
+
+  };
+
+  answers.appendChild(btn);
+
+ });
+
+}
+
+next.onclick=function(){
+
+ puzzleIndex++;
+
+ if(puzzleIndex>=puzzleList.length)
+  puzzleIndex=0;
+
+ loadPuzzle();
+
+ setStatus("🧩 New puzzle!");
+
+};
+
+loadPuzzle();
+
+
+/* =====================================
+   READY
+===================================== */
+
+setStatus("✅ Luna AI Ready!");
+
+});
+
+</script>
+
+</body>
+</html>
