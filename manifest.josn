@@ -6,5 +6,11 @@
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
   "description": "Luna Language Helper",
-  "icons": []
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
 }
